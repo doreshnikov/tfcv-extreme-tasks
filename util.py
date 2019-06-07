@@ -2,23 +2,32 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-# width, height - plot sizes
-# velocityFunc should return velocity in complex point
-# picture - plot figure
-# maskFunc should return true, if given complex point inside area
-def showStream(width, height, velocityFunc, picture=None, maskFunc=None):
-    Y, X = np.mgrid[-height:height:100j, -width:width:100j]
-    Z = X + 1j * Y
-    V = velocityFunc(Z)
+def show_stream(width, height, velocity_func, mask_func=None, picture=None):
+    """
+    Builds StreamPlot for given figure parameters, velocity function and object recognition function
 
-    if maskFunc is not None:
-        V[maskFunc(Z)] = 0
+    :param width: plot width limit (negative and positive)
+    :param height: plot height limit (negative and positive)
+    :param velocity_func: takes point :arg z and returns complex velocity vector in this point
+    :param mask_func: takes point :arg z and returns if this point is inside sleek object or not
+    :param picture: :class:`artist.Artist` sleek object to be rendered
+    :return:
+    """
 
-    V_x = np.real(V)
-    V_y = -np.imag(V)
+    size = max(width, height)
+
+    y, x = np.mgrid[-height:height:200j, -width:width:200j]
+    z = x + 1j * y
+    v = velocity_func(z)
+
+    if mask_func is not None:
+        v[mask_func(z)] = 0
+
+    vx = np.real(v)
+    vy = -np.imag(v)
 
     plt.figure(figsize=(width, height))
-    plt.streamplot(X, Y, V_x, V_y, density=2.5, minlength=1)
+    plt.streamplot(x, y, vx, vy, density=5, minlength=1, arrowsize=5)
 
     if picture is not None:
         ax = plt.gca()
