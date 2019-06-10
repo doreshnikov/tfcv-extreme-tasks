@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.colors
 
 
-def show_stream(width, height, velocity_func, mask_func=None, picture=None):
+def show_stream(width, height, velocity_func, mask_func=None, picture=None, pressure=False):
     """
     Builds velocity StreamPlot and pressure contour plot for given figure parameters, velocity function and object recognition function
 
@@ -37,9 +37,8 @@ def show_stream(width, height, velocity_func, mask_func=None, picture=None):
 
     plt.figure(figsize=(width, height))
     plt.streamplot(x, y, vx, vy, density=5, minlength=0.1, arrowsize=5, cmap='plasma', color=vmod)
-    plt.contourf(x, y, p, np.mgrid[minp:maxp:30j], cmap='bwr')
-
-
+    if (pressure):
+        plt.contourf(x, y, p, np.mgrid[minp:maxp:30j], cmap='bwr')
     if picture is not None:
         ax = plt.gca()
         ax.add_patch(picture)
