@@ -3,6 +3,14 @@ import numpy as np
 import matplotlib.colors
 
 
+def static_var(varname, value):
+    def decorate(func):
+        setattr(func, varname, value)
+        return func
+    return decorate
+
+
+@static_var("STREAM_FIGURES", 0)
 def show_stream(width, height, velocity_func, mask_func=None, picture=None, pressure=False):
     """
     Builds velocity StreamPlot and pressure contour plot for given figure parameters, velocity function and object recognition function
@@ -14,6 +22,9 @@ def show_stream(width, height, velocity_func, mask_func=None, picture=None, pres
     :param picture: :class:`artist.Artist` sleek object to be rendered
     :return:
     """
+    
+    plt.figure(show_stream.STREAM_FIGURES)
+    show_stream.STREAM_FIGURES += 1
 
     size = max(width, height)
     velocity_func = np.vectorize(velocity_func)
